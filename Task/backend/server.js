@@ -1,9 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Importing CORS
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors()); // Using CORS
 
 mongoose.connect('mongodb+srv://dhillangop329:Dggamer29@cluster0.jlmo84i.mongodb.net/', {
   useNewUrlParser: true,
