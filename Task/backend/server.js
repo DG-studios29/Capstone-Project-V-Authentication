@@ -17,9 +17,9 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-const authRoutes = require('./routes/auth');
-const credentialRoutes = require('./routes/credentials');
-const adminRoutes = require('./routes/admin');
+const authRoutes = require('./routes/authRoutes');
+const credentialRoutes = require('./routes/credentialRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/credentials', credentialRoutes);
