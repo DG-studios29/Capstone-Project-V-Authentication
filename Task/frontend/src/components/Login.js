@@ -10,11 +10,12 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Send POST request to login the user
       const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
-      toast.success('Login successful');
-      localStorage.setItem('token', res.data.token);
+      toast.success('Login successful');  // Display success message
+      localStorage.setItem('token', res.data.token);  // Store token in local storage
     } catch (err) {
-      toast.error('Login failed');
+      toast.error('Login failed');  // Display error message
     }
   };
 

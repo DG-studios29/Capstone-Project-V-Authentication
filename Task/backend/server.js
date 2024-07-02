@@ -1,13 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Importing CORS
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors()); // Using CORS
+app.use(cors());
 
-mongoose.connect('mongodb+srv://dhillangop329:Dggamer29@cluster0.jlmo84i.mongodb.net/', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -20,7 +21,9 @@ app.listen(port, () => {
 const authRoutes = require('./routes/authRoutes');
 const credentialRoutes = require('./routes/credentialRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const divisionRoutes = require('./routes/divisionRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/credentials', credentialRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/divisions', divisionRoutes);

@@ -11,40 +11,43 @@ const AdminPanel = ({ token }) => {
 
   const handleAssignDivision = async () => {
     try {
+      // Send POST request to assign a user to a division
       const response = await axios.post(
         'http://localhost:5000/api/admin/assign-division',
         { userId, divisionId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessage(response.data.message);
+      setMessage(response.data.message);  // Display success message
     } catch (err) {
-      setMessage(err.response ? err.response.data.error : 'Error assigning division');
+      setMessage(err.response ? err.response.data.error : 'Error assigning division');  // Display error message
     }
   };
 
   const handleAssignOu = async () => {
     try {
+      // Send POST request to assign a user to an OU
       const response = await axios.post(
         'http://localhost:5000/api/admin/assign-ou',
         { userId, ouId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessage(response.data.message);
+      setMessage(response.data.message);  // Display success message
     } catch (err) {
-      setMessage(err.response ? err.response.data.error : 'Error assigning OU');
+      setMessage(err.response ? err.response.data.error : 'Error assigning OU');  // Display error message
     }
   };
 
   const handleChangeRole = async () => {
     try {
+      // Send POST request to change a user's role
       const response = await axios.post(
         'http://localhost:5000/api/admin/change-role',
         { userId, role },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessage(response.data.message);
+      setMessage(response.data.message);  // Display success message
     } catch (err) {
-      setMessage(err.response ? err.response.data.error : 'Error changing role');
+      setMessage(err.response ? err.response.data.error : 'Error changing role');  // Display error message
     }
   };
 
