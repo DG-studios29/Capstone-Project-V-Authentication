@@ -1,18 +1,16 @@
 const express = require('express');
-const { viewCredentials, addCredential, updateCredential } = require('../controllers/credentialController');
-const { authenticate, authorize } = require('../middleware/authMiddleware');
 const router = express.Router();
+const { addCredential, updateCredential, getCredentialsByDivision } = require('../controllers/credentialController');
+const { authenticate } = require('../middleware/authMiddleware');
+const { roleCheck } = require('../middleware/roleMiddleware');
 
-// Route to view credentials of a specific division
-// Requires user to be authenticated and authorized
-router.get('/division/:id', authenticate, authorize, viewCredentials);
+// Route to get credentials by division (accessible by all roles)
+router.get('/division/:divisionId', authenticate, getCredentialsByDivision);
 
-// Route to add a credential to a specific division
-// Requires user to be authenticated and authorized
-router.post('/division/:id', authenticate, authorize, addCredential);
+// Route to add a new credential to a division (normal users and above)
+router.post('/division/:divisionId', authenticate, roleCheck(['normal', 'management', 'admin']), addCredential);
 
-// Route to update a specific credential
-// Requires user to be authenticated and authorized
-router.put('/credential/:id', authenticate, authorize, updateCredential);
+// Route to update a credential (management users and admin)
+router.put('/:credentialId', authenticate, roleCheck(['management', 'admin']), updateCredential);
 
 module.exports = router;

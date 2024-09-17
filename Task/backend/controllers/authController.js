@@ -3,7 +3,14 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Division = require('../models/Division');
 
-// Registration function
+/**
+ * Register a new user.
+ * This function handles user registration by creating a new user with a hashed password
+ * and assigning them to a division. It then saves the user to the database.
+ * 
+ * @param {Object} req - The request object from Express.js.
+ * @param {Object} res - The response object from Express.js.
+ */
 exports.register = async (req, res) => {
   const { username, password, divisionId } = req.body;
 
@@ -23,7 +30,14 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login function
+/**
+ * Log in an existing user.
+ * This function handles user login by verifying the provided password,
+ * generating a JWT token, and returning it along with the user's role and division ID.
+ * 
+ * @param {Object} req - The request object from Express.js.
+ * @param {Object} res - The response object from Express.js.
+ */
 exports.login = async (req, res) => {
   const { username, password } = req.body;
 

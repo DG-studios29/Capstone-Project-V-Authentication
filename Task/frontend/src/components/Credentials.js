@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Credentials = ({ divisionId, token }) => {
+const Credentials = ({ divisionId, token, role }) => {
   const [credentials, setCredentials] = useState([]);
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [newCredential, setNewCredential] = useState({ name: '', value: '' });
 
   useEffect(() => {
     const fetchCredentials = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/credentials/division/${divisionId}`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         setCredentials(response.data);
       } catch (err) {
-        setMessage(err.response?.data?.error || 'An error occurred while fetching credentials');
+        setMessage('Error fetching credentials');
+        console.error(err);
       }
     };
 
@@ -25,54 +24,67 @@ const Credentials = ({ divisionId, token }) => {
     }
   }, [divisionId, token]);
 
-  const handleAddCredential = async () => {
+  const addCredential = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/credentials/division/${divisionId}`, {
-        name,
-        username,
-        password
-      }, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.post(`http://localhost:5000/api/credentials/division/${divisionId}`, newCredential, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       setCredentials([...credentials, response.data]);
-      setName('');
-      setUsername('');
-      setPassword('');
+      setNewCredential({ name: '', value: '' });
       setMessage('Credential added successfully');
     } catch (err) {
-      setMessage(err.response?.data?.error || 'An error occurred while adding the credential');
+      setMessage('Error adding credential');
+      console.error(err);
+    }
+  };
+
+  const updateCredential = async (credentialId, updatedData) => {
+    try {
+      await axios.put(`http://localhost:5000/api/credentials/${credentialId}`, updatedData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMessage('Credential updated successfully');
+    } catch (err) {
+      setMessage('Error updating credential');
+      console.error(err);
     }
   };
 
   return (
     <div>
       <h2>Credentials</h2>
-      {message && <p>{message}</p>}
+      <p>{message}</p>
       <ul>
         {credentials.map(credential => (
-          <li key={credential._id}>{credential.name} - {credential.username}</li>
+          <li key={credential._id}>
+            {credential.name}: {credential.value}
+            {role === 'management' && (
+              <button onClick={() => updateCredential(credential._id, { name: credential.name, value: credential.value })}>
+                Update
+              </button>
+            )}
+          </li>
         ))}
       </ul>
-      <h3>Add Credential</h3>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleAddCredential}>Add Credential</button>
+
+      {role === 'normal' || role === 'management' ? (
+        <div>
+          <h3>Add Credential</h3>
+          <input
+            type="text"
+            placeholder="Name"
+            value={newCredential.name}
+            onChange={(e) => setNewCredential({ ...newCredential, name: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Value"
+            value={newCredential.value}
+            onChange={(e) => setNewCredential({ ...newCredential, value: e.target.value })}
+          />
+          <button onClick={addCredential}>Add Credential</button>
+        </div>
+      ) : null}
     </div>
   );
 };

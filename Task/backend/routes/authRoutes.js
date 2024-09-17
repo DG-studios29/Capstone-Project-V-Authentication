@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
+const { register, login } = require('../controllers/authController');  // Ensure correct path
 
 // Register route
 router.post('/register', register);
