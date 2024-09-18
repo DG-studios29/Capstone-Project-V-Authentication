@@ -1,21 +1,18 @@
+const Credential = require('../models/Credential');
+const Division = require('../models/Division');
+
 /**
- * Updates a specific credential.
+ * Fetches all credentials for a specific division.
  */
-exports.updateCredential = async (req, res) => {
-  const { credentialId } = req.params;
-  const { name, value } = req.body;
+exports.getCredentialsByDivision = async (req, res) => {
+  const { divisionId } = req.params;
 
   try {
-    const credential = await Credential.findById(credentialId);
-    if (!credential) {
-      return res.status(404).send({ error: 'Credential not found' });
+    const credentials = await Credential.find({ division: divisionId });
+    if (!credentials || credentials.length === 0) {
+      return res.status(404).send({ error: 'No credentials found for this division' });
     }
-
-    credential.name = name || credential.name;
-    credential.value = value || credential.value;
-    await credential.save();
-
-    res.status(200).send({ message: 'Credential updated successfully', credential });
+    res.send(credentials);
   } catch (err) {
     res.status(500).send({ error: err.message });
   }

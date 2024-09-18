@@ -4,8 +4,8 @@ const { addCredential, updateCredential, getCredentialsByDivision } = require('.
 const { authenticate } = require('../middleware/authMiddleware');
 const { roleCheck } = require('../middleware/roleMiddleware');
 
-// Route to get credentials by division (accessible by all roles)
-router.get('/division/:divisionId', authenticate, getCredentialsByDivision);
+// Route to get credentials by division
+router.get('/division/:divisionId', getCredentialsByDivision);
 
 // Route to add a new credential to a division (normal users and above)
 router.post('/division/:divisionId', authenticate, roleCheck(['normal', 'management', 'admin']), addCredential);
